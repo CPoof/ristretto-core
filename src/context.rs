@@ -11,7 +11,8 @@
 
 use core::cell::RefCell;
 
-use rand_core::{RngCore, CryptoRng};
+use rand_core::{Rng, CryptoRng};
+use rand::rng;
 
 use merlin::Transcript;
 
@@ -77,7 +78,7 @@ pub trait SigningTranscript {
     /// Produce secret witness bytes from the protocol transcript
     /// and any "nonce seeds" kept with the secret keys.
     fn witness_bytes(&self, label: &'static [u8], dest: &mut [u8], nonce_seeds: &[&[u8]]) {
-        self.witness_bytes_rng(label, dest, nonce_seeds, super::getrandom_or_panic())
+        self.witness_bytes_rng(label, dest, nonce_seeds, rng())
     }
 
     /// Produce secret witness bytes from the protocol transcript
@@ -89,7 +90,7 @@ pub trait SigningTranscript {
         nonce_seeds: &[&[u8]],
         rng: R,
     ) where
-        R: RngCore + CryptoRng;
+        R: Rng + CryptoRng;
 }
 
 /// We delegates any mutable reference to its base type, like `&mut Rng`
@@ -122,7 +123,7 @@ where T: SigningTranscript + ?Sized,
         {  (**self).witness_bytes(label,dest,nonce_seeds)  }
     #[inline(always)]
     fn witness_bytes_rng<R>(&self, label: &'static [u8], dest: &mut [u8], nonce_seeds: &[&[u8]], rng: R)
-    where R: RngCore+CryptoRng
+    where R: Rng+CryptoRng
         {  (**self).witness_bytes_rng(label,dest,nonce_seeds,rng)  }
 }
 
@@ -146,7 +147,7 @@ impl SigningTranscript for Transcript {
         nonce_seeds: &[&[u8]],
         mut rng: R,
     ) where
-        R: RngCore + CryptoRng,
+        R: Rng + CryptoRng,
     {
         let mut br = self.build_rng();
         for ns in nonce_seeds {
@@ -325,7 +326,7 @@ where
         nonce_seeds: &[&[u8]],
         mut rng: R,
     ) where
-        R: RngCore + CryptoRng,
+        R: Rng + CryptoRng,
     {
         let mut h = self.0.clone().chain(b"wb");
         input_bytes(&mut h, label);
@@ -359,7 +360,7 @@ where
 pub struct SigningTranscriptWithRng<T, R>
 where
     T: SigningTranscript,
-    R: RngCore + CryptoRng,
+    R: Rng + CryptoRng,
 {
     t: T,
     rng: RefCell<R>,
@@ -367,7 +368,7 @@ where
 
 #[rustfmt::skip]
 impl<T,R> SigningTranscript for SigningTranscriptWithRng<T,R>
-where T: SigningTranscript, R: RngCore+CryptoRng
+where T: SigningTranscript, R: Rng+CryptoRng
 {
     fn commit_bytes(&mut self, label: &'static [u8], bytes: &[u8])
         {  self.t.commit_bytes(label, bytes)  }
@@ -379,7 +380,7 @@ where T: SigningTranscript, R: RngCore+CryptoRng
        {  self.witness_bytes_rng(label, dest, nonce_seeds, &mut *self.rng.borrow_mut())  }
 
     fn witness_bytes_rng<RR>(&self, label: &'static [u8], dest: &mut [u8], nonce_seeds: &[&[u8]], rng: RR)
-    where RR: RngCore+CryptoRng
+    where RR: Rng+CryptoRng
        {  self.t.witness_bytes_rng(label,dest,nonce_seeds,rng)  }
 
 }
@@ -394,20 +395,7 @@ where T: SigningTranscript, R: RngCore+CryptoRng
 pub fn attach_rng<T, R>(t: T, rng: R) -> SigningTranscriptWithRng<T, R>
 where
     T: SigningTranscript,
-    R: RngCore + CryptoRng,
+    R: Rng + CryptoRng,
 {
     SigningTranscriptWithRng { t, rng: RefCell::new(rng) }
-}
-
-#[cfg(feature = "rand_chacha")]
-use rand_chacha::ChaChaRng;
-
-/// Attach a `ChaChaRng` to a `Transcript` to repalce the default `ThreadRng`
-#[cfg(feature = "rand_chacha")]
-pub fn attach_chacharng<T>(t: T, seed: [u8; 32]) -> SigningTranscriptWithRng<T, ChaChaRng>
-where
-    T: SigningTranscript,
-{
-    use rand_core::SeedableRng;
-    attach_rng(t, ChaChaRng::from_seed(seed))
 }

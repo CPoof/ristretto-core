@@ -13,7 +13,8 @@
 use core::convert::AsRef;
 use core::fmt::{Debug};
 
-use rand_core::{RngCore, CryptoRng};
+use rand::{Rng, rng};
+use rand_core::{CryptoRng};
 
 use curve25519_dalek::constants;
 use curve25519_dalek::ristretto::{CompressedRistretto, RistrettoPoint};
@@ -133,10 +134,10 @@ impl MiniSecretKey {
     ///
     /// ```compile_fail
     /// # fn main() {
-    /// use rand::{Rng, rngs::OsRng};
+    /// use rand::{Rng, rngs::rng};
     /// use schnorrkel::{MiniSecretKey, SecretKey};
     ///
-    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(OsRng);
+    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand_uniform();
     /// # }
     /// ```
@@ -169,12 +170,11 @@ impl MiniSecretKey {
     /// # Examples
     ///
     /// ```compile_fail
-    /// # #[cfg(feature = "getrandom")]
     /// # fn main() {
-    /// use rand::{Rng, rngs::OsRng};
+    /// use rand::{Rng, rngs::rng};
     /// use schnorrkel::{MiniSecretKey, SecretKey};
     ///
-    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(OsRng);
+    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand_ed25519();
     /// # }
     /// ```
@@ -218,12 +218,11 @@ impl MiniSecretKey {
     ///
     /// ```
     /// # fn main() {
-    /// use rand::{Rng, rngs::OsRng};
-    /// # #[cfg(feature = "getrandom")]
+    /// use rand::{Rng, rng};
     /// # {
     /// use schnorrkel::{MiniSecretKey, SecretKey, ExpansionMode};
     ///
-    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(OsRng);
+    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand(ExpansionMode::Uniform);
     /// # }
     /// # }
@@ -296,10 +295,10 @@ impl MiniSecretKey {
     /// # Example
     ///
     /// ```
-    /// use rand::{Rng, rngs::OsRng};
+    /// use rand::{Rng, rng};
     /// use schnorrkel::{PublicKey, MiniSecretKey, Signature};
     ///
-    /// let secret_key: MiniSecretKey = MiniSecretKey::generate_with(OsRng);
+    /// let secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// ```
     ///
     /// # Input
@@ -307,7 +306,7 @@ impl MiniSecretKey {
     /// A CSPRNG with a `fill_bytes()` method, e.g. `rand_chacha::ChaChaRng`
     pub fn generate_with<R>(mut csprng: R) -> MiniSecretKey
     where
-        R: CryptoRng + RngCore,
+        R: CryptoRng + Rng,
     {
         let mut sk: MiniSecretKey = MiniSecretKey([0u8; 32]);
         csprng.fill_bytes(&mut sk.0);
@@ -327,18 +326,16 @@ impl MiniSecretKey {
     /// Afterwards, you can generate the corresponding public key.
     ///
     /// ```
-    /// # use rand::{Rng, SeedableRng};
-    /// # use rand_chacha::ChaChaRng;
+    /// # use rand::{rng};
     /// # use schnorrkel::{PublicKey, MiniSecretKey, ExpansionMode, Signature};
     /// #
-    /// # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+    /// # let mut csprng = rng();
     /// # let secret_key: MiniSecretKey = MiniSecretKey::generate_with(&mut csprng);
     ///
     /// let public_key: PublicKey = secret_key.expand_to_public(ExpansionMode::Ed25519);
     /// ```
-    #[cfg(feature = "getrandom")]
     pub fn generate() -> MiniSecretKey {
-        Self::generate_with(super::getrandom_or_panic())
+        Self::generate_with(rng())
     }
 }
 
@@ -556,7 +553,7 @@ impl SecretKey {
     /// layer.
     pub fn generate_with<R>(mut csprng: R) -> SecretKey
     where
-        R: CryptoRng + RngCore,
+        R: CryptoRng + Rng,
     {
         let mut key: [u8; 64] = [0u8; 64];
         csprng.fill_bytes(&mut key);
@@ -567,9 +564,8 @@ impl SecretKey {
 
     /// Generate an "unbiased" `SecretKey` directly,
     /// bypassing the `MiniSecretKey` layer.
-    #[cfg(feature = "getrandom")]
     pub fn generate() -> SecretKey {
-        Self::generate_with(super::getrandom_or_panic())
+        Self::generate_with(rng())
     }
 
     /// Derive the `PublicKey` corresponding to this `SecretKey`.
@@ -758,7 +754,6 @@ impl Keypair {
     /// # Examples
     ///
     /// ```
-    /// # #[cfg(feature = "getrandom")]
     /// # {
     /// use schnorrkel::{Keypair, KEYPAIR_LENGTH};
     ///
@@ -875,13 +870,11 @@ impl Keypair {
     /// ```
     /// # fn main() {
     ///
-    /// use rand::{Rng, rngs::OsRng};
-    /// # #[cfg(feature = "getrandom")]
+    /// use rand::{Rng, rng};
     /// use schnorrkel::Keypair;
     /// use schnorrkel::Signature;
     ///
-    /// # #[cfg(feature = "getrandom")]
-    /// let keypair: Keypair = Keypair::generate_with(OsRng);
+    /// let keypair: Keypair = Keypair::generate_with(rng());
     ///
     /// # }
     /// ```
@@ -895,7 +888,7 @@ impl Keypair {
     /// imposed on Ed25519 keys.
     pub fn generate_with<R>(csprng: R) -> Keypair
     where
-        R: CryptoRng + RngCore,
+        R: CryptoRng + Rng,
     {
         let secret: SecretKey = SecretKey::generate_with(csprng);
         let public: PublicKey = secret.to_public();
@@ -905,9 +898,8 @@ impl Keypair {
 
     /// Generate a Ristretto Schnorr `Keypair` directly, from a user
     /// suplied `csprng`, bypassing the `MiniSecretKey` layer.
-    #[cfg(feature = "getrandom")]
     pub fn generate() -> Keypair {
-        Self::generate_with(super::getrandom_or_panic())
+        Self::generate_with(rng())
     }
 }
 
@@ -962,10 +954,9 @@ mod test {
         debug_assert_eq!(pk_d.as_compressed().decompress().unwrap(), RistrettoPoint::default());
     }
 
-    #[cfg(feature = "getrandom")]
     #[test]
     fn keypair_zeroize() {
-        let mut csprng = rand_core::OsRng;
+        let mut csprng = rand::rng();
 
         let mut keypair = Keypair::generate_with(&mut csprng);
 
@@ -981,10 +972,9 @@ mod test {
         assert!(!as_bytes(&keypair).iter().all(|x| *x == 0u8));
     }
 
-    #[cfg(feature = "getrandom")]
     #[test]
     fn pubkey_from_mini_secret_and_expanded_secret() {
-        let mut csprng = rand_core::OsRng;
+        let mut csprng = rand::rng();
 
         let mini_secret: MiniSecretKey = MiniSecretKey::generate_with(&mut csprng);
         let secret: SecretKey = mini_secret.expand(ExpansionMode::Ed25519);
@@ -999,7 +989,6 @@ mod test {
         assert!(public_from_mini_secret == public_from_secret);
     }
 
-    #[cfg(feature = "getrandom")]
     #[test]
     fn secret_key_can_be_converted_to_ed25519_bytes_and_back() {
         let count = if cfg!(debug_assertions) { 200000 } else { 2000000 };

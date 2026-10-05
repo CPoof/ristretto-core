@@ -21,10 +21,10 @@
 //! ```
 //! # #[cfg(all(feature = "std"))]
 //! # fn main() {
-//! use rand::{Rng, rngs::OsRng};
+//! use rand::{rng};
 //! use schnorrkel::{Keypair,Signature};
 //!
-//! let keypair: Keypair = Keypair::generate_with(OsRng);
+//! let keypair: Keypair = Keypair::generate_with(rng());
 //! # }
 //! #
 //! # #[cfg(any(not(feature = "std")))]
@@ -35,10 +35,9 @@
 //!
 //! ```
 //! # fn main() {
-//! # use rand::{SeedableRng}; // Rng
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair,Signature,signing_context};
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! let context = signing_context(b"this signature does this thing");
 //! let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -52,10 +51,9 @@
 //!
 //! ```
 //! # fn main() {
-//! # use rand::{SeedableRng}; // Rng
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair,Signature,signing_context};
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
 //! # let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -71,11 +69,10 @@
 //!
 //! ```
 //! # fn main() {
-//! # use rand::{SeedableRng}; // Rng
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair,Signature,signing_context};
-//! use schnorrkel::PublicKey;
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # use schnorrkel::PublicKey;
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
 //! # let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -98,11 +95,10 @@
 //! ```
 //! # #[cfg(feature = "getrandom")]
 //! # fn main() {
-//! # use rand::{Rng, SeedableRng};
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
 //! use schnorrkel::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
 //! # let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -121,13 +117,11 @@
 //! And similarly, decoded from bytes with `::from_bytes()`:
 //!
 //! ```
-//! # use rand::{Rng, SeedableRng};
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{SecretKey, Keypair, Signature, PublicKey, SignatureError, signing_context};
 //! # use schnorrkel::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
-//! # #[cfg(feature = "getrandom")]
 //! # fn do_test() -> Result<(SecretKey, PublicKey, Keypair, Signature), SignatureError> {
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair_orig: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
 //! # let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -145,7 +139,6 @@
 //! # Ok((secret_key, public_key, keypair, signature))
 //! # }
 //! # fn main() {
-//! #     #[cfg(feature = "getrandom")]
 //! #     do_test();
 //! # }
 //! ```
@@ -166,11 +159,10 @@
 //! ```
 //! # #[cfg(feature = "serde")]
 //! # fn main() {
-//! # use rand::{Rng, SeedableRng};
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
 //! use bincode::{serialize};
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
 //! # let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
@@ -191,13 +183,12 @@
 //! ```
 //! # #[cfg(feature = "serde")]
 //! # fn main() {
-//! # use rand::{Rng, SeedableRng};
-//! # use rand_chacha::ChaChaRng;
+//! # use rand::{rng};
 //! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
 //! # use bincode::{serialize};
 //! use bincode::{deserialize};
 //!
-//! # let mut csprng: ChaChaRng = ChaChaRng::from_seed([0u8; 32]);
+//! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! let message: &[u8] = "This is a test of the tsunami alert system.".as_bytes();
 //! # let context = signing_context(b"this signature does this thing");
@@ -231,7 +222,6 @@ extern crate std;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-use getrandom_or_panic::{RngCore, CryptoRng, getrandom_or_panic};
 use curve25519_dalek::scalar::Scalar;
 
 #[macro_use]
@@ -243,25 +233,11 @@ pub mod keys;
 
 pub mod context;
 pub mod sign;
-pub mod vrf;
 pub mod derive;
-pub mod cert;
 pub mod errors;
-
-#[cfg(all(feature = "aead", feature = "getrandom"))]
-pub mod aead;
 
 #[cfg(feature = "alloc")]
 mod batch;
-
-// Not safe because need randomness
-
-#[cfg_attr(
-    not(test),
-    deprecated(since = "0.11.0", note = "This module will be replaced in the future")
-)]
-#[cfg(feature = "std")]
-pub mod musig;
 
 pub use crate::keys::*; // {MiniSecretKey,SecretKey,PublicKey,Keypair,ExpansionMode}; + *_LENGTH
 pub use crate::context::{signing_context}; // SigningContext,SigningTranscript

@@ -309,13 +309,13 @@ impl Keypair {
     ///
     /// ```
     /// use schnorrkel::{Signature,Keypair};
-    /// use rand::prelude::*; // ThreadRng,thread_rng
+    /// use rand::{rngs::ThreadRng, rng};
     /// use shake::Shake128;
     /// use shake::digest::{Update};
     ///
     /// # #[cfg(all(feature = "std"))]
     /// # fn main() {
-    /// let mut csprng: ThreadRng = thread_rng();
+    /// let mut csprng: ThreadRng = rng();
     /// let keypair: Keypair = Keypair::generate_with(&mut csprng);
     /// let message: &[u8] = b"All I want is to pet all of the dogs.";
     ///
@@ -335,12 +335,12 @@ impl Keypair {
     ///
     /// ```
     /// # use schnorrkel::{Keypair,Signature,signing_context};
-    /// # use rand::prelude::*; // ThreadRng,thread_rng
+    /// # use rand::{rngs::ThreadRng, rng};
     /// # use shake::digest::Update;
     /// #
     /// # #[cfg(all(feature = "std"))]
     /// # fn main() {
-    /// # let mut csprng: ThreadRng = thread_rng();
+    /// # let mut csprng: ThreadRng = rng();
     /// # let keypair: Keypair = Keypair::generate_with(&mut csprng);
     /// # let message: &[u8] = b"All I want is to pet all of the dogs.";
     /// # let prehashed = shake::Shake256::default().chain(message);
@@ -433,7 +433,6 @@ mod test {
 
     use super::super::*;
 
-    #[cfg(feature = "getrandom")]
     #[test]
     fn sign_verify_bytes() {
         let good_sig: Signature;
@@ -444,7 +443,7 @@ mod test {
         let good: &[u8] = "test message".as_bytes();
         let bad: &[u8] = "wrong message".as_bytes();
 
-        let mut csprng = rand_core::OsRng;
+        let mut csprng = rand::rng();
 
         let keypair = Keypair::generate_with(&mut csprng);
         good_sig = keypair.sign(ctx.bytes(&good));
@@ -471,7 +470,6 @@ mod test {
         );
     }
 
-    #[cfg(feature = "getrandom")]
     #[test]
     fn sign_verify_xof() {
         let good_sig: Signature;
@@ -486,7 +484,7 @@ mod test {
         let prehashed_bad: Shake128 = Shake128::default().chain(bad);
         // You may verify that `Shake128: Copy` is possible, making these clones below correct.
 
-        let mut csprng = rand_core::OsRng;
+        let mut csprng = rand::rng();
 
         let keypair = Keypair::generate_with(&mut csprng);
         good_sig = keypair.sign(ctx.xof(prehashed_good.clone()));
