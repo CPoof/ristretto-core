@@ -21,7 +21,6 @@ use core::fmt::{Debug};
 
 use curve25519_dalek::ristretto::{CompressedRistretto, RistrettoPoint};
 use subtle::{ConstantTimeEq, Choice};
-// use curve25519_dalek::scalar::Scalar;
 
 use crate::errors::{SignatureError, SignatureResult};
 
@@ -53,10 +52,6 @@ impl ConstantTimeEq for RistrettoBoth {
 #[rustfmt::skip]
 impl RistrettoBoth {
     const DESCRIPTION: &'static str = "A ristretto point represented as a 32-byte compressed point";
-
-    // I dislike getter methods, and prefer direct field access, but doing
-    // getters here permits the fields being private, and gives us faster
-    // equality comparisons.
 
     /// Access the compressed Ristretto form
     pub fn as_compressed(&self) -> &CompressedRistretto { &self.compressed }

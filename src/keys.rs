@@ -134,7 +134,7 @@ impl MiniSecretKey {
     ///
     /// ```compile_fail
     /// # fn main() {
-    /// use rand::{Rng, rngs::rng};
+    /// use rand::rng;
     /// use schnorrkel::{MiniSecretKey, SecretKey};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
@@ -171,7 +171,7 @@ impl MiniSecretKey {
     ///
     /// ```compile_fail
     /// # fn main() {
-    /// use rand::{Rng, rngs::rng};
+    /// use rand::rng;
     /// use schnorrkel::{MiniSecretKey, SecretKey};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
@@ -218,7 +218,7 @@ impl MiniSecretKey {
     ///
     /// ```
     /// # fn main() {
-    /// use rand::{Rng, rng};
+    /// use rand::{rng};
     /// # {
     /// use schnorrkel::{MiniSecretKey, SecretKey, ExpansionMode};
     ///
@@ -295,7 +295,7 @@ impl MiniSecretKey {
     /// # Example
     ///
     /// ```
-    /// use rand::{Rng, rng};
+    /// use rand::rng;
     /// use schnorrkel::{PublicKey, MiniSecretKey, Signature};
     ///
     /// let secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
@@ -326,7 +326,7 @@ impl MiniSecretKey {
     /// Afterwards, you can generate the corresponding public key.
     ///
     /// ```
-    /// # use rand::{rng};
+    /// # use rand::rng;
     /// # use schnorrkel::{PublicKey, MiniSecretKey, ExpansionMode, Signature};
     /// #
     /// # let mut csprng = rng();
@@ -384,28 +384,6 @@ impl ConstantTimeEq for SecretKey {
     }
 }
 
-/*
-impl From<&MiniSecretKey> for SecretKey {
-    /// Construct an `SecretKey` from a `MiniSecretKey`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// # #[cfg(feature = "getrandom")
-    /// # fn main() {
-    /// use rand::{Rng, rngs::OsRng};
-    /// use schnorrkel::{MiniSecretKey, SecretKey};
-    ///
-    /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(OsRng);
-    /// let secret_key: SecretKey = SecretKey::from(&mini_secret_key);
-    /// # }
-    /// ```
-    fn from(msk: &MiniSecretKey) -> SecretKey {
-        msk.expand(ExpansionMode::Ed25519)
-    }
-}
-*/
-
 impl SecretKey {
     const DESCRIPTION: &'static str =
         "An ed25519-like expanded secret key as 64 bytes, as specified in RFC8032.";
@@ -419,7 +397,6 @@ impl SecretKey {
     /// # Examples
     ///
     /// ```
-    /// # #[cfg(feature = "getrandom")]
     /// # {
     /// use schnorrkel::{MiniSecretKey, SecretKey};
     ///
@@ -447,7 +424,6 @@ impl SecretKey {
     /// ```
     /// use schnorrkel::{MiniSecretKey, SecretKey, ExpansionMode, SignatureError};
     ///
-    /// # #[cfg(feature = "getrandom")]
     /// # {
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate();
     /// let secret_key: SecretKey = mini_secret_key.expand(MiniSecretKey::ED25519_MODE);
@@ -495,15 +471,6 @@ impl SecretKey {
         bytes[32..].copy_from_slice(&self.nonce[..]);
         bytes
     }
-
-    /* Unused tooling removed to reduce dependencies.
-    /// Convert this `SecretKey` into an Ed25519 expanded secret key.
-    #[cfg(feature = "ed25519_dalek")]
-    pub fn to_ed25519_expanded_secret_key(&self) -> ed25519_dalek::ExpandedSecretKey {
-        ed25519_dalek::ExpandedSecretKey::from_bytes(&self.to_ed25519_bytes()[..])
-        .expect("Improper serialisation of Ed25519 secret key!")
-    }
-    */
 
     /// Construct an `SecretKey` from a slice of bytes, corresponding to
     /// an Ed25519 expanded secret key.
@@ -653,7 +620,6 @@ impl PublicKey {
     /// # Example
     ///
     /// ```
-    /// # #[cfg(feature = "getrandom")]
     /// # {
     /// use schnorrkel::{SecretKey, PublicKey, PUBLIC_KEY_LENGTH, SignatureError};
     ///
@@ -870,7 +836,7 @@ impl Keypair {
     /// ```
     /// # fn main() {
     ///
-    /// use rand::{Rng, rng};
+    /// use rand::rng;
     /// use schnorrkel::Keypair;
     /// use schnorrkel::Signature;
     ///

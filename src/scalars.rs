@@ -35,7 +35,6 @@ pub(crate) fn multiply_scalar_bytes_by_cofactor(scalar: &mut [u8; 32]) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    // use ed25519_dalek::SecretKey;
     use rand::{Rng, rng};
 
     // TODO: Simple test `RistrettoPoint` is implemented as an `EdwardsPoint`

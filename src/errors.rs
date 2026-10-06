@@ -10,10 +10,6 @@
 
 //! ### Errors which may occur when parsing keys and/or signatures to or from wire formats.
 
-// rustc seems to think the typenames in match statements (e.g. in
-// Display) should be snake cased, for some reason.
-#![allow(non_snake_case)]
-
 use core::fmt;
 use core::fmt::Display;
 
