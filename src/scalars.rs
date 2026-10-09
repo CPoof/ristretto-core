@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2019 Web 3 Foundation
 // See LICENSE for licensing information.
 //

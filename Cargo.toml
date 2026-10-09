@@ -4,8 +4,7 @@ version = "0.11.6"
 authors = ["Jeff Burdges <jeff@web3.foundation>"]
 readme = "README.md"
 license = "BSD-3-Clause"
-repository = "https://github.com/w3f/schnorrkel"
-documentation = "https://docs.rs/schnorrkel"
+repository = "https://github.com/CPoof/ristretto-core"
 keywords = ["cryptography", "ed25519", "curve25519", "signature", "ECC"]
 categories = ["cryptography", "no-std"]
 description = "Schnorr VRF, signatures, etc. using the Ristretto group"
@@ -20,7 +19,7 @@ curve25519-dalek = { version = "5.0.0", default-features = false, features = [
     "legacy_compatibility",
 ] }
 subtle = { version = "2.4.1", default-features = false }
-merlin = { version = "2.0.0", default-features = false }
+merlin_bump = { version = "2.0.0", default-features = false }
 rand = "0.10.3"
 rand_core = { version = "0.10.1", default-features = false }
 serde_crate = { version = "1.0.130", package = "serde", default-features = false, optional = true }
@@ -59,4 +58,4 @@ serde = ["serde_crate", "serde_bytes", "cfg-if"]
 # and https://github.com/w3f/schnorrkel/issues/65#issuecomment-786923588
 
 [patch.crates-io]
-merlin = {git = "https://github.com/CPoof/merlin-bump", branch = "main"}
+merlin_bump = {git = "https://github.com/CPoof/merlin-bump", branch = "main"}

@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2019 isis lovecruft and Web 3 Foundation
 // See LICENSE for licensing information.
 //
@@ -135,14 +135,14 @@ impl MiniSecretKey {
     /// ```compile_fail
     /// # fn main() {
     /// use rand::rng;
-    /// use schnorrkel::{MiniSecretKey, SecretKey};
+    /// use ristretto_core::{MiniSecretKey, SecretKey};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand_uniform();
     /// # }
     /// ```
     fn expand_uniform(&self) -> SecretKey {
-        let mut t = merlin::Transcript::new(b"ExpandSecretKeys");
+        let mut t = merlin_bump::Transcript::new(b"ExpandSecretKeys");
         t.append_message(b"mini", &self.0[..]);
 
         let mut scalar_bytes = [0u8; 64];
@@ -165,14 +165,14 @@ impl MiniSecretKey {
     /// one mapping as standard, but doing so makes the standard more
     /// complex, and possibly harder to implement.  If anyone does
     /// standardize the mapping to the curve then this method permits
-    /// compatible schnorrkel and ed25519 keys.
+    /// compatible ristretto_core and ed25519 keys.
     ///
     /// # Examples
     ///
     /// ```compile_fail
     /// # fn main() {
     /// use rand::rng;
-    /// use schnorrkel::{MiniSecretKey, SecretKey};
+    /// use ristretto_core::{MiniSecretKey, SecretKey};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand_ed25519();
@@ -220,7 +220,7 @@ impl MiniSecretKey {
     /// # fn main() {
     /// use rand::{rng};
     /// # {
-    /// use schnorrkel::{MiniSecretKey, SecretKey, ExpansionMode};
+    /// use ristretto_core::{MiniSecretKey, SecretKey, ExpansionMode};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// let secret_key: SecretKey = mini_secret_key.expand(ExpansionMode::Uniform);
@@ -261,7 +261,7 @@ impl MiniSecretKey {
     /// # Example
     ///
     /// ```
-    /// use schnorrkel::{MiniSecretKey, MINI_SECRET_KEY_LENGTH};
+    /// use ristretto_core::{MiniSecretKey, MINI_SECRET_KEY_LENGTH};
     ///
     /// let secret_key_bytes: [u8; MINI_SECRET_KEY_LENGTH] = [
     ///    157, 097, 177, 157, 239, 253, 090, 096,
@@ -296,7 +296,7 @@ impl MiniSecretKey {
     ///
     /// ```
     /// use rand::rng;
-    /// use schnorrkel::{PublicKey, MiniSecretKey, Signature};
+    /// use ristretto_core::{PublicKey, MiniSecretKey, Signature};
     ///
     /// let secret_key: MiniSecretKey = MiniSecretKey::generate_with(rng());
     /// ```
@@ -318,7 +318,7 @@ impl MiniSecretKey {
     /// # Example
     ///
     /// ```
-    /// use schnorrkel::{PublicKey, MiniSecretKey, Signature};
+    /// use ristretto_core::{PublicKey, MiniSecretKey, Signature};
     ///
     /// let secret_key: MiniSecretKey = MiniSecretKey::generate();
     /// ```
@@ -327,7 +327,7 @@ impl MiniSecretKey {
     ///
     /// ```
     /// # use rand::rng;
-    /// # use schnorrkel::{PublicKey, MiniSecretKey, ExpansionMode, Signature};
+    /// # use ristretto_core::{PublicKey, MiniSecretKey, ExpansionMode, Signature};
     /// #
     /// # let mut csprng = rng();
     /// # let secret_key: MiniSecretKey = MiniSecretKey::generate_with(&mut csprng);
@@ -398,7 +398,7 @@ impl SecretKey {
     ///
     /// ```
     /// # {
-    /// use schnorrkel::{MiniSecretKey, SecretKey};
+    /// use ristretto_core::{MiniSecretKey, SecretKey};
     ///
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate();
     /// let secret_key: SecretKey = mini_secret_key.expand(MiniSecretKey::UNIFORM_MODE);
@@ -422,7 +422,7 @@ impl SecretKey {
     /// # Examples
     ///
     /// ```
-    /// use schnorrkel::{MiniSecretKey, SecretKey, ExpansionMode, SignatureError};
+    /// use ristretto_core::{MiniSecretKey, SecretKey, ExpansionMode, SignatureError};
     ///
     /// # {
     /// let mini_secret_key: MiniSecretKey = MiniSecretKey::generate();
@@ -478,7 +478,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```
-    /// use schnorrkel::{SecretKey, SECRET_KEY_LENGTH};
+    /// use ristretto_core::{SecretKey, SECRET_KEY_LENGTH};
     /// use hex_literal::hex;
     ///
     /// let secret = hex!("28b0ae221c6bb06856b287f60d7ea0d98552ea5a16db16956849aa371db3eb51fd190cce74df356432b410bd64682309d6dedb27c76845daf388557cbac3ca34");
@@ -621,7 +621,7 @@ impl PublicKey {
     ///
     /// ```
     /// # {
-    /// use schnorrkel::{SecretKey, PublicKey, PUBLIC_KEY_LENGTH, SignatureError};
+    /// use ristretto_core::{SecretKey, PublicKey, PUBLIC_KEY_LENGTH, SignatureError};
     ///
     /// let public_key: PublicKey = SecretKey::generate().to_public();
     /// let public_key_bytes = public_key.to_bytes();
@@ -639,7 +639,7 @@ impl PublicKey {
     /// # Example
     ///
     /// ```
-    /// use schnorrkel::{PublicKey, PUBLIC_KEY_LENGTH, SignatureError};
+    /// use ristretto_core::{PublicKey, PUBLIC_KEY_LENGTH, SignatureError};
     ///
     /// let public_key_bytes: [u8; PUBLIC_KEY_LENGTH] = [
     ///     208, 120, 140, 129, 177, 179, 237, 159,
@@ -721,7 +721,7 @@ impl Keypair {
     ///
     /// ```
     /// # {
-    /// use schnorrkel::{Keypair, KEYPAIR_LENGTH};
+    /// use ristretto_core::{Keypair, KEYPAIR_LENGTH};
     ///
     /// let keypair: Keypair = Keypair::generate();
     /// let bytes: [u8; KEYPAIR_LENGTH] = keypair.to_bytes();
@@ -748,7 +748,7 @@ impl Keypair {
     /// # Examples
     ///
     /// ```
-    /// use schnorrkel::{Keypair, KEYPAIR_LENGTH};
+    /// use ristretto_core::{Keypair, KEYPAIR_LENGTH};
     /// use hex_literal::hex;
     ///
     /// // TODO: Fix test vector
@@ -802,7 +802,7 @@ impl Keypair {
     /// # Examples
     ///
     /// ```
-    /// use schnorrkel::{Keypair, KEYPAIR_LENGTH};
+    /// use ristretto_core::{Keypair, KEYPAIR_LENGTH};
     /// use hex_literal::hex;
     ///
     /// let keypair_bytes = hex!("28b0ae221c6bb06856b287f60d7ea0d98552ea5a16db16956849aa371db3eb51fd190cce74df356432b410bd64682309d6dedb27c76845daf388557cbac3ca3446ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a");
@@ -837,8 +837,8 @@ impl Keypair {
     /// # fn main() {
     ///
     /// use rand::rng;
-    /// use schnorrkel::Keypair;
-    /// use schnorrkel::Signature;
+    /// use ristretto_core::Keypair;
+    /// use ristretto_core::Signature;
     ///
     /// let keypair: Keypair = Keypair::generate_with(rng());
     ///

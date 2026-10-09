@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2019 Isis Lovecruft and Web 3 Foundation
 // See LICENSE for licensing information.
 //
@@ -85,8 +85,8 @@ pub enum SignatureError {
         /// Length expected by the constructor in bytes
         length: usize,
     },
-    /// Signature not marked as schnorrkel, maybe try ed25519 instead.
-    NotMarkedSchnorrkel,
+    /// Signature not marked as ristretto_core, maybe try ed25519 instead.
+    NotMarkedRistrettoCore,
     /// There is no record of the preceding multi-signautre protocol
     /// stage for the specified public key.
     MuSigAbsent {
@@ -122,8 +122,8 @@ impl Display for SignatureError {
                 write!(f, "The provided key is not valid"),
             BytesLengthError { name, length, .. } =>
                 write!(f, "{name} must be {length} bytes in length"),
-            NotMarkedSchnorrkel =>
-                write!(f, "Signature bytes not marked as a schnorrkel signature"),
+            NotMarkedRistrettoCore =>
+                write!(f, "Signature bytes not marked as a ristretto_core signature"),
             MuSigAbsent { musig_stage, } =>
                 write!(f, "Absent {musig_stage} violated multi-signature protocol"),
             MuSigInconsistent { musig_stage, duplicate, } =>

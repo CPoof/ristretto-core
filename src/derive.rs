@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2019 Web 3 Foundation
 // See LICENSE for licensing information.
 //
@@ -63,9 +63,9 @@ pub trait Derivation: Sized {
     /// # Example:
     /// 
     /// ```
-    /// use schnorrkel::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation}};
+    /// use ristretto_core::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation}};
     ///
-    /// let t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+    /// let t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
     /// let chaincode = ChainCode([0u8; CHAIN_CODE_LENGTH]); // This is an example. In practice, we should use a random value.
     /// 
     /// let keypair: Keypair = Keypair::generate();
@@ -90,9 +90,9 @@ pub trait Derivation: Sized {
     /// # Example:
     /// 
     /// ```
-    /// use schnorrkel::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation}};
+    /// use ristretto_core::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation}};
     ///
-    /// let t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+    /// let t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
     /// let chaincode = ChainCode([0u8; CHAIN_CODE_LENGTH]); // This is an example. In practice, we should use a random value.
     /// 
     /// let keypair: Keypair = Keypair::generate();
@@ -100,7 +100,7 @@ pub trait Derivation: Sized {
     /// let (derived_keypair, _) = keypair.derived_key_simple(chaincode, &bytes);
     /// ```
     fn derived_key_simple<B: AsRef<[u8]>>(&self, cc: ChainCode, i: B) -> (Self, ChainCode) {
-        let mut t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+        let mut t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
         t.append_message(b"sign-bytes", i.as_ref());
         self.derived_key(t, cc)
     }
@@ -112,7 +112,7 @@ pub trait Derivation: Sized {
         B: AsRef<[u8]>,
         R: Rng + CryptoRng,
     {
-        let mut t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+        let mut t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
         t.append_message(b"sign-bytes", i.as_ref());
         self.derived_key(super::context::attach_rng(t, rng), cc)
     }
@@ -162,7 +162,7 @@ impl SecretKey {
         cc: Option<ChainCode>,
         i: B,
     ) -> (MiniSecretKey, ChainCode) {
-        let mut t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+        let mut t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
         t.append_message(b"sign-bytes", i.as_ref());
 
         if let Some(c) = cc {
@@ -234,10 +234,10 @@ impl Keypair {
     /// # Example:
     /// 
     /// ```
-    /// use schnorrkel::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode}};
-    /// # use crate::schnorrkel::derive::Derivation;
+    /// use ristretto_core::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode}};
+    /// # use crate::ristretto_core::derive::Derivation;
     ///
-    /// let t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+    /// let t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
     /// let chaincode = ChainCode([0u8; CHAIN_CODE_LENGTH]); // This is an example. In practice, we should use a random value.
     /// let keypair: Keypair = Keypair::generate();
     /// # let t1 = t.clone();
@@ -322,9 +322,9 @@ impl<K: Derivation> ExtendedKey<K> {
     /// # Example:
     /// 
     /// ```
-    /// use schnorrkel::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation, ExtendedKey}};
+    /// use ristretto_core::{Keypair,derive::{CHAIN_CODE_LENGTH, ChainCode, Derivation, ExtendedKey}};
     ///
-    /// let t = merlin::Transcript::new(b"SchnorrRistrettoHDKD");
+    /// let t = merlin_bump::Transcript::new(b"SchnorrRistrettoHDKD");
     /// let chaincode = ChainCode([0u8; CHAIN_CODE_LENGTH]); // This is an example. In practice, we should use a random value.
     /// let keypair: Keypair = Keypair::generate();
     /// 

@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2017-2019 Isis Lovecruft and Web 3 Foundation
 // See LICENSE for licensing information.
 //
@@ -22,7 +22,7 @@
 //! # #[cfg(all(feature = "std"))]
 //! # fn main() {
 //! use rand::{rng};
-//! use schnorrkel::{Keypair,Signature};
+//! use ristretto_core::{Keypair,Signature};
 //!
 //! let keypair: Keypair = Keypair::generate_with(rng());
 //! # }
@@ -36,7 +36,7 @@
 //! ```
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair,Signature,signing_context};
+//! # use ristretto_core::{Keypair,Signature,signing_context};
 //! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! let context = signing_context(b"this signature does this thing");
@@ -52,7 +52,7 @@
 //! ```
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair,Signature,signing_context};
+//! # use ristretto_core::{Keypair,Signature,signing_context};
 //! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
@@ -70,8 +70,8 @@
 //! ```
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair,Signature,signing_context};
-//! # use schnorrkel::PublicKey;
+//! # use ristretto_core::{Keypair,Signature,signing_context};
+//! # use ristretto_core::PublicKey;
 //! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
@@ -96,8 +96,8 @@
 //! # #[cfg(feature = "getrandom")]
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
-//! use schnorrkel::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
+//! # use ristretto_core::{Keypair, Signature, PublicKey, signing_context};
+//! use ristretto_core::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
 //! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
 //! # let context = signing_context(b"this signature does this thing");
@@ -118,8 +118,8 @@
 //!
 //! ```
 //! # use rand::{rng};
-//! # use schnorrkel::{SecretKey, Keypair, Signature, PublicKey, SignatureError, signing_context};
-//! # use schnorrkel::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
+//! # use ristretto_core::{SecretKey, Keypair, Signature, PublicKey, SignatureError, signing_context};
+//! # use ristretto_core::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, KEYPAIR_LENGTH, SIGNATURE_LENGTH};
 //! # fn do_test() -> Result<(SecretKey, PublicKey, Keypair, Signature), SignatureError> {
 //! # let mut csprng = rng();
 //! # let keypair_orig: Keypair = Keypair::generate_with(&mut csprng);
@@ -147,7 +147,7 @@
 //!
 //! If you prefer the bytes to be wrapped in another serialisation format, all
 //! types additionally come with built-in [serde](https://serde.rs) support by
-//! building `schnorrkell` via:
+//! building `ristretto_corel` via:
 //!
 //! ```bash
 //! $ cargo build --features="serde"
@@ -160,7 +160,7 @@
 //! # #[cfg(feature = "serde")]
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
+//! # use ristretto_core::{Keypair, Signature, PublicKey, signing_context};
 //! use bincode::{serialize};
 //! # let mut csprng = rng();
 //! # let keypair: Keypair = Keypair::generate_with(&mut csprng);
@@ -184,7 +184,7 @@
 //! # #[cfg(feature = "serde")]
 //! # fn main() {
 //! # use rand::{rng};
-//! # use schnorrkel::{Keypair, Signature, PublicKey, signing_context};
+//! # use ristretto_core::{Keypair, Signature, PublicKey, signing_context};
 //! # use bincode::{serialize};
 //! use bincode::{deserialize};
 //!

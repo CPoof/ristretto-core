@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2017-2019 isis lovecruft
 // Copyright (c) 2019 Web 3 Foundation
 // See LICENSE for licensing information.
@@ -55,7 +55,7 @@ const ASSERT_MESSAGE: &str =
 /// # Examples
 ///
 /// ```
-/// use schnorrkel::{Keypair,PublicKey,Signature,verify_batch,signing_context};
+/// use ristretto_core::{Keypair,PublicKey,Signature,verify_batch,signing_context};
 ///
 /// # fn main() {
 /// let ctx = signing_context(b"some batch");
@@ -200,7 +200,7 @@ where
 {
 
     // Assumulate public keys, signatures, and transcripts for pseudo-random delinearization scalars
-    let mut zs_t = merlin::Transcript::new(b"V-RNG");
+    let mut zs_t = merlin_bump::Transcript::new(b"V-RNG");
     for pk in public_keys {
         zs_t.commit_point(b"",pk.as_compressed());
     }

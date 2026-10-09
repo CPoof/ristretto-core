@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2017-2019 isis lovecruft
 // Copyright (c) 2019 Web 3 Foundation
 // See LICENSE for licensing information.
@@ -99,14 +99,14 @@ impl Signature {
 
     /// Construct a `Signature` from a slice of bytes.
     ///
-    /// We distinguish schnorrkell signatures from ed25519 signatures
+    /// We distinguish ristretto_corel signatures from ed25519 signatures
     /// by setting the high bit of byte 31.  We return an error if
-    /// this marker remains unset because otherwise schnorrkel
+    /// this marker remains unset because otherwise ristretto_core
     /// signatures would be indistinguishable from ed25519 signatures.
-    /// We cannot always distinguish between schnorrkel and ed25519
+    /// We cannot always distinguish between ristretto_core and ed25519
     /// public keys either, so without this marker bit we could not
     /// do batch verification in systems that support precisely
-    /// ed25519 and schnorrkel.
+    /// ed25519 and ristretto_core.
     ///
     /// We cannot distinguish amongst different `SigningTranscript`
     /// types using these marker bits, but protocol should not need
@@ -126,7 +126,7 @@ impl Signature {
         lower.copy_from_slice(&bytes[..32]);
         upper.copy_from_slice(&bytes[32..]);
         if upper[31] & 128 == 0 {
-            return Err(SignatureError::NotMarkedSchnorrkel);
+            return Err(SignatureError::NotMarkedRistrettoCore);
         }
         upper[31] &= 127;
 
@@ -254,7 +254,7 @@ impl Keypair {
     /// by prehashing your message, like
     ///
     /// ```
-    /// use schnorrkel::{Signature,Keypair};
+    /// use ristretto_core::{Signature,Keypair};
     /// use rand::{rngs::ThreadRng, rng};
     /// use shake::Shake128;
     /// use shake::digest::{Update};
@@ -280,7 +280,7 @@ impl Keypair {
     /// one purpose can be substituted for the other.
     ///
     /// ```
-    /// # use schnorrkel::{Keypair,Signature,signing_context};
+    /// # use ristretto_core::{Keypair,Signature,signing_context};
     /// # use rand::{rngs::ThreadRng, rng};
     /// # use shake::digest::Update;
     /// #
@@ -319,7 +319,7 @@ impl Keypair {
     /// # Examples
     ///
     /// ```
-    /// use schnorrkel::{Keypair,Signature,signing_context};
+    /// use ristretto_core::{Keypair,Signature,signing_context};
     /// use rand::rng;
     ///
     /// # fn main() {

@@ -1,6 +1,6 @@
 // -*- mode: rust; -*-
 //
-// This file is part of schnorrkel.
+// This file is part of ristretto_core.
 // Copyright (c) 2019 Web 3 Foundation
 // See LICENSE for licensing information.
 //
@@ -14,7 +14,7 @@ use core::cell::RefCell;
 use rand_core::{Rng, CryptoRng};
 use rand::rng;
 
-use merlin::Transcript;
+use merlin_bump::Transcript;
 
 use curve25519_dalek::digest::{Update, FixedOutput, ExtendableOutput, XofReader};
 use curve25519_dalek::digest::consts::{U32, U64};
