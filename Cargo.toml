@@ -1,5 +1,5 @@
 [package]
-name = "schnorrkel"
+name = "ristretto_core"
 version = "0.11.6"
 authors = ["Jeff Burdges <jeff@web3.foundation>"]
 readme = "README.md"
